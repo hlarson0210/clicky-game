@@ -7,6 +7,7 @@ this is a memory application - the goal is to click on all the cards without a d
 
 ## technologies used
 1. react
+2. bootstrap
 
 ## contributors
 i am the sole contributor to this project.
