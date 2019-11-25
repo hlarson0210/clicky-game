@@ -11,11 +11,12 @@ let style2 = {
   "height": "12rem"
 }
 
+
 function FriendCard(props) {
   return (
-        <div style={style2} className="card">
-          <img onClick={() => props.shuffleArr(props.id)} style={style} alt={props.name} src={props.image} id={props.id} key={props.key} className="card-img-top mx-auto my-auto" />
-        </div>
+    <div style={style2} className="card" onClick={() => props.shuffleArr(props.id)}>
+      <img onClick={() => props.checkGuess(props.id)} style={style} alt={props.name} src={props.image} id={props.id} key={props.key} className="card-img-top mx-auto my-auto" />
+    </div>
   );
 }
 

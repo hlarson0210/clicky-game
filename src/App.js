@@ -12,15 +12,15 @@ class App extends React.Component {
     friends: friends,
     score: 0,
     topScore: 0,
-    start: "",
-    keepGuessing: "you guessed correctly",
+    start: "click any image to start",
+    textClass: "",
     shuffle: [],
-    clicked: []
+    guessed: new Set(),
   }
-  // push the key of the click img to the clicked state
 
   componentDidMount() {
     this.shuffleMeTimbers();
+    this.setState({ start: "click any image to start" })
   }
 
   shuffleArray = arr => {
@@ -29,17 +29,37 @@ class App extends React.Component {
 
   shuffleMeTimbers = () => {
     this.setState({ shuffle: this.shuffleArray(this.state.friends) });
-    this.clicked();
-    this.countMyClicks();
   }
-  
-  clicked() {
-    this.setState({clicked: true})
-  }
-  // removeAThing = id => this.setState({ friends: this.state.friends.filter(item => item.id !== id) });
 
-  countMyClicks = id => this.setState({ clicked: this.state.clicked.filter(item => item.id !== id) })
-  
+
+
+  incorrect() {
+    this.setState({ score: 0, start: "you guessed incorrectly" });
+  }
+
+  correct() {
+    let score = this.state.score + 1;
+
+    if (score > this.state.topScore) {
+      this.setState({ score: score, topScore: score, start: "you guessed correctly" });
+    } else {
+      this.setState({ score: score, start: "you guessed correctly" });
+    }
+  }
+
+  checkGuess = (friendID) => {
+    this.shuffleMeTimbers();
+    if (this.state.guessed.has(friendID)) {
+      this.setState({ guessed: new Set() }, () => {
+        this.incorrect();
+      });
+
+      return
+    }
+    this.state.guessed.add(friendID);
+
+    this.correct();
+  }
 
   render() {
     return (
@@ -47,25 +67,29 @@ class App extends React.Component {
         <Navbar
           score={this.state.score}
           topScore={this.state.topScore}
-          textClass={this.state.start}>{this.state.keepGuessing}</Navbar>
+          textClass={this.state.textClass}>{this.state.start}</Navbar>
         <div className="container">
           <div className="jumbotron-fluid pt-5 mt-5">
             <h1 className="title">clicky game</h1>
             <h5 className="title">click on an image to earn points...but don't click on the same one twice</h5>
           </div>
         </div>
-        {this.state.friends.map(friend =>
-          <FriendCard
-            shuffleArr={this.shuffleMeTimbers}
-            clicked={this.countMyClicks}
-            id={friend.id}
-            {...console.log(friend.id)}
-            key={friend.id}
-            name={friend.name}
-            image={friend.image}
-          />)}
-          {console.log("===================")}
-      <Footer></Footer>
+        <div className="container">
+          <div className="row">
+            {this.state.friends.map(friend =>
+              <FriendCard
+                shuffleArr={this.shuffleMeTimbers}
+                onCorrect={() => { this.correct() }}
+                onIncorrect={() => { this.incorrect() }}
+                checkGuess={this.checkGuess}
+                id={friend.id}
+                key={friend.id}
+                name={friend.name}
+                image={friend.image}
+              />)}
+          </div>
+        </div>
+        <Footer></Footer>
       </Wrapper>
     );
   }
