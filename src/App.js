@@ -12,7 +12,7 @@ class App extends React.Component {
     friends: friends,
     score: 0,
     topScore: 0,
-    start: "click any image to start",
+    start: "",
     textClass: "",
     shuffle: [],
     guessed: new Set(),
@@ -32,9 +32,8 @@ class App extends React.Component {
   }
 
 
-
   incorrect() {
-    this.setState({ score: 0, start: "you guessed incorrectly" });
+    this.setState({ score: 0, start: "you guessed incorrectly - click any image to start again" });
   }
 
   correct() {
